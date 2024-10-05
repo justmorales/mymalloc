@@ -45,12 +45,12 @@ int main(int argc, char **argv) {
         }
     }
 
-    // free all objects
-    if (!LEAK) {
-        for (i = 0; i < OBJECTS; i++) {
-            free(obj[i]);
-        }
-    }
+    // // free all objects
+    // if (!LEAK) {
+    //     for (i = 0; i < OBJECTS; i++) {
+    //         free(obj[i]);
+    //     }
+    // }
 
     printf("%d incorrect bytes\n", errors);
     return EXIT_SUCCESS;
