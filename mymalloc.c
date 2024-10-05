@@ -27,7 +27,7 @@ static void leak_checker() {
     // Traverse through heap
     while (node->allocated) {
         count++;
-        bytes+=node->size;
+        bytes += node->size;
         node = node + node->size;
     }
 
@@ -37,7 +37,7 @@ static void leak_checker() {
 static void initialize_heap() {
     // Create initial header and set size to MEMLENGTH
     metadata* head = (metadata*)heap.bytes;
-    head->size = MEMLENGTH;
+    head->size = MEMLENGTH - HEADERSIZE;
     head->allocated = 0;
     initialized = 1;
     atexit(leak_checker);
@@ -68,6 +68,7 @@ void *mymalloc(size_t size, char *file, int line){
             // If chunk is big enough to split into 2
             if (curr->size - size >= HEADERSIZE * 2) {
                 metadata* new = (metadata*)((char*)curr + HEADERSIZE + size);
+                printf("\nWHAT: %d\n", curr->size);
                 new->size = curr->size - size;
                 new->allocated = 0;
 
@@ -80,7 +81,7 @@ void *mymalloc(size_t size, char *file, int line){
             return (void*)(curr+1);
         }
         printf("%p is allocated by a chunk of size %d\n", curr, curr->size + 8);
-        curr = (metadata*)((char*)curr + curr->size);
+        curr = (metadata*)((char*)curr + curr->size + HEADERSIZE);
     }
 
     printf("mymalloc: Insufficient memory for requested bytes (%s:%d)\n", file, line);
