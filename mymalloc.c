@@ -28,7 +28,7 @@ static void leak_checker() {
     while (node->allocated) {
         count++;
         bytes += node->size;
-        node = node + node->size;
+        node = node + node->size + HEADERSIZE;
     }
 
     printf("\nmymalloc: %d bytes leaked in %d objects\n", bytes, count);
@@ -95,9 +95,9 @@ void *mymalloc(size_t size, char *file, int line){
  */
 void myfree(void *ptr, char *file, int line) {
 	//header size invluded in payload size
-	char *pointer = (char *)ptr;
+	char *pointer = (char *)ptr - HEADERSIZE;
 
-    printf("%p\n",pointer);
+    //printf("%p\n",pointer);
 	//check if the pointer exists
 	if(pointer == NULL){
 		fprintf(stderr, "%s:%d:free: Can't free NULL\n", file, line);
@@ -119,12 +119,12 @@ void myfree(void *ptr, char *file, int line) {
 	
 	metadata *meta = (metadata *)heap.bytes;
 
-	while(meta->allocated != 0){
-		if(meta >= (metadata*)(heap.bytes + MEMLENGTH)){
+	while(meta < (metadata*)(heap.bytes + MEMLENGTH)){
+		if(meta == (metadata*)pointer){
 			break;
 		}
 		//move to the next block
-		meta += HEADERSIZE + meta->size;
+		meta = (metadata*)((char*)meta + meta->size + HEADERSIZE);
 		
 	}
 
@@ -133,9 +133,10 @@ void myfree(void *ptr, char *file, int line) {
 		fprintf(stderr, "%s:%d:free Pointer not malloc-ed\n", file, line);
 	return;
 	}
-	
+	//printf("%d\n", meta->allocated);
 	meta->allocated = 0;
-	
+	//printf("%d\n", meta->allocated);
+
 
 	//merge();
 
@@ -146,18 +147,21 @@ void myfree(void *ptr, char *file, int line) {
 	// struct metadata *previous = NULL;
     metadata *prev = NULL;
     metadata *curr = (metadata *)heap.bytes;
+    metadata *next = curr + sizeof(metadata) + curr->size;
 
 
  	while (curr < (metadata*)(heap.bytes + MEMLENGTH)) {
         if (prev && prev->allocated == 0 && curr->allocated == 0) {
             prev->size += sizeof(metadata) + curr->size;
-        } else {
+        }else {
             prev = curr;
         }
+        if(next->allocated == 0 && curr->allocated == 0){
+            curr->size += sizeof(metadata) + next->size;
+        }
         curr += sizeof(metadata) + curr->size;
+        next += sizeof(metadata) + next->size;
     }
-
-
 
 
 
