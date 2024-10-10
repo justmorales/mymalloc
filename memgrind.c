@@ -38,19 +38,18 @@ int main(int argc, char **argv) {
     for (i = 0; i < OBJECTS; i++) {
         for (j = 0; j < OBJSIZE; j++) {
             if (obj[i][j] != i) {
-            errors++;
-            printf("Object %d byte %d incorrect: %d\n", i, j, obj[i]
-            [j]);
+                errors++;
+                printf("Object %d byte %d incorrect: %d\n", i, j, obj[i][j]);
             }
         }
     }
 
-    // // free all objects
-    // if (!LEAK) {
-    //     for (i = 0; i < OBJECTS; i++) {
-    //         free(obj[i]);
-    //     }
-    // }
+    // free all objects
+    if (!LEAK) {
+        for (i = 0; i < OBJECTS; i++) {
+            free(obj[i]);
+        }
+    }
 
     printf("%d incorrect bytes\n", errors);
     return EXIT_SUCCESS;

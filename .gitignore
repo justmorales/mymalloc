@@ -1,0 +1,3 @@
+core_tests
+memgrind
+*.o
