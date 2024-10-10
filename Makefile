@@ -13,4 +13,4 @@ memgrind: memgrind.c mymalloc.o
 	$(CC) -o $@ $^ $(CFLAGS)
 
 clean:
-	rm -f *.o memgrind core_tests
+	rm -f *.o memgrind core_tests memtest
