@@ -85,7 +85,6 @@ static void free_coalesced(){
     int *q = malloc(sizeof(char)*1012);
     int *r = malloc(sizeof(char)*1012);
     int *s = malloc(sizeof(char)*1012);
-    printf("p: %p\nq: %p\nr: %p\ns: %p\n",p,q,r,s);
     free(s);
     free(q);
     free(r);
