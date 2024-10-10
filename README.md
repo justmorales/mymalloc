@@ -20,3 +20,4 @@ Actual Code explanation
 
 
 HOW TO COMPILE $ make executables: ./memgrind ./core_tests
+
