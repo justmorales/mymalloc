@@ -156,9 +156,9 @@ static void randomAlloc120(){
  * @brief Run all tests and record benchmarks in standard output
  */
 int main (){
-    printf("AVG TIME FOR MALLOC/FREE 1 BYTE 120 TIMES: %lf seconds\n", repeat50(oneByte120));
-    printf("AVG TIME FOR MALLOC/FREE ARRAY OF 120 PTR OF 1 BYTE: %lf seconds\n", repeat50(oneByteArray120));
-    printf("AVG TIME FOR RANDOM MALLOC/FREE ARRAY OF 120 PTR OF 1 BYTE: %lf seconds\n", repeat50(randomMallocOneByte120));
-    printf("AVG TIME FOR REVERSE FREEING MEMORY OF 10 BYTES AND ALLOCATING WHOLE CHUNK TO SEE COALESCE: %lf seconds\n", repeat50(reverseFree20Byte120));
-    printf("AVG TIME FOR RANDOM MALLOC/FREE ARRAY OF 120 PTR OF RANDOM BYTES: %lf seconds\n", repeat50(randomAlloc120));
+    printf("Average time of malloc/free run 120 times (1 byte): %lf seconds\n", repeat50(oneByte120));
+    printf("Average time of malloc/free with an array of 120 pointers (1 byte): %lf seconds\n", repeat50(oneByteArray120));
+    printf("Average time of random malloc/free run 120 times (1 byte): %lf seconds\n", repeat50(randomMallocOneByte120));
+    printf("Average time of reverse free (10 bytes) and allocating entire heap: %lf seconds\n", repeat50(reverseFree20Byte120));
+    printf("Average time of random malloc/free with an array of 120 pointers (random bytes): %lf seconds\n", repeat50(randomAlloc120));
 }

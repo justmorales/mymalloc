@@ -1,3 +1,5 @@
 core_tests
 memgrind
+memtest
+memgrind_provided.c
 *.o

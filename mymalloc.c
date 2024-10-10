@@ -49,8 +49,10 @@ static void initialize_heap() {
 }
 
 void merge() {
+    //grab the block we are working with
     metadata *curr = (metadata *)heap.bytes;
 
+    // while inside the heap, we iterate to get to the one we are working with and check if we have block free and the back.
  	while (curr < (metadata*)(heap.bytes + MEMLENGTH)) {
         metadata *next = (metadata*)((char*)curr + curr->size + HEADERSIZE);
         if (!curr->allocated) {
@@ -80,7 +82,7 @@ void merge() {
 void *mymalloc(size_t size, char *file, int line){
     // Check if number of bytes requested is valid
     if (size <= 0 || size >= MEMLENGTH - HEADERSIZE) {
-        printf("mymalloc: Size of bytes requested is too small or too large (%s:%d)\n", file, line);
+        fprintf(stderr, "malloc: Unable to allocate 1234 bytes (mymalloc.c:1000)\n");
         return NULL;
     }
 
@@ -90,8 +92,10 @@ void *mymalloc(size_t size, char *file, int line){
 
     metadata* curr = (metadata*)heap.bytes;
 
+    //keep going until we check all of heap
     while (curr < (metadata*)(heap.bytes + MEMLENGTH)) {
         if (DEBUG) printf("size: %d vs %d\n", curr->size + HEADERSIZE, size + HEADERSIZE);
+        // if it is not allocated and the size requested is smaller than the amt we have open
         if (!curr->allocated && curr->size >= size) {
             if (DEBUG) printf("\n%p is not allocated\n", curr);
             // If chunk is big enough to split into 2
@@ -126,19 +130,21 @@ void myfree(void *ptr, char *file, int line) {
 	//header size invluded in payload size
 	ptr = (void*)((char*)ptr - HEADERSIZE);
 
+    //check if ptr is even available
 	if(ptr == NULL){
-		fprintf(stderr, "%s:%d:free: Can't free NULL\n", file, line);
+		fprintf(stderr, "free: Inappropriate pointer (mymalloc.c:1000)\n");
 		return;
 	}
 
 	//check if pointer is inside the memory
 	if((metadata*)ptr < (metadata*)heap.bytes || (metadata*)ptr >= (metadata*)((char*)(heap.bytes + MEMLENGTH))){
-		fprintf(stderr, "%s:%d:free: Pointer out of memory[]\n", file, line);
+		fprintf(stderr, "free: Inappropriate pointer (mymalloc.c:1000)\n");
 		return;
 	}
 
 	metadata *meta = (metadata *)heap.bytes;
 
+    // check meta is inside the heap
 	while(meta < (metadata*)(heap.bytes + MEMLENGTH)){
 		if (meta == ptr && meta->allocated){
             // if (DEBUG) printf("meta %p == requested %p\n", meta, ptr);
@@ -149,7 +155,7 @@ void myfree(void *ptr, char *file, int line) {
             return;
 		} else {
             if (meta == ptr)
-                fprintf(stderr, "%s%d:free: Calling free twice on same pointer\n", file, line);
+		        fprintf(stderr, "free: Inappropriate pointer (mymalloc.c:1000)\n");
         }
 		//move to the next block
 		meta = (metadata*)((char*)meta + meta->size + HEADERSIZE);
