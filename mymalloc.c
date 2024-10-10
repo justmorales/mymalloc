@@ -37,6 +37,7 @@ static void leak_checker() {
 static void initialize_heap() {
     // Create initial header and set size to MEMLENGTH
     metadata* head = (metadata*)heap.bytes;
+    printf("INITIAL HEADER: %p\n", head);
     head->size = MEMLENGTH - HEADERSIZE;
     head->allocated = 0;
     initialized = 1;
@@ -68,7 +69,7 @@ void *mymalloc(size_t size, char *file, int line){
             // If chunk is big enough to split into 2
             if (curr->size - size >= HEADERSIZE * 2) {
                 metadata* new = (metadata*)((char*)curr + HEADERSIZE + size);
-                printf("\nWHAT: %d\n", curr->size);
+                //printf("\nWHAT: %d\n", curr->size);
                 new->size = curr->size - size;
                 new->allocated = 0;
 
@@ -77,6 +78,7 @@ void *mymalloc(size_t size, char *file, int line){
                 printf("\tNew chunk located %p of size %d\n", new, new->size + 8);
             }
             // Return pointer to payload by adding 1 * sizeof(metadata)
+            printf("\tcurr addy: %p\n", curr);
             curr->allocated = 1;
             return (void*)(curr+1);
         }
@@ -118,8 +120,11 @@ void myfree(void *ptr, char *file, int line) {
 	// struct metadata *meta = (struct metadata *)iterate;
 	
 	metadata *meta = (metadata *)heap.bytes;
+    //printf("meta is : %p\n\n",meta);
 
 	while(meta < (metadata*)(heap.bytes + MEMLENGTH)){
+        //printf("meta->size : %d\n",meta->size);
+
 		if(meta == (metadata*)pointer){
 			break;
 		}
@@ -128,10 +133,14 @@ void myfree(void *ptr, char *file, int line) {
 		
 	}
 
+    // printf("meta is : %p\n",meta);
+    // printf("meta->allocated is: %d\n", meta->allocated);
+    // printf("meta->size is: %d\n", meta->size);
+
 	//we have the block we are working with and checking if it is malloced or not
 	if(meta->allocated == 0){
 		fprintf(stderr, "%s:%d:free Pointer not malloc-ed\n", file, line);
-	return;
+	    return;
 	}
 	//printf("%d\n", meta->allocated);
 	meta->allocated = 0;
@@ -147,7 +156,7 @@ void myfree(void *ptr, char *file, int line) {
 	// struct metadata *previous = NULL;
     metadata *prev = NULL;
     metadata *curr = (metadata *)heap.bytes;
-    metadata *next = curr + sizeof(metadata) + curr->size;
+    //metadata *next = curr + sizeof(metadata) + curr->size;
 
 
  	while (curr < (metadata*)(heap.bytes + MEMLENGTH)) {
@@ -156,11 +165,11 @@ void myfree(void *ptr, char *file, int line) {
         }else {
             prev = curr;
         }
-        if(next->allocated == 0 && curr->allocated == 0){
-            curr->size += sizeof(metadata) + next->size;
-        }
+        // if(next->allocated == 0 && curr->allocated == 0){
+        //     curr->size += sizeof(metadata) + next->size;
+        // }
         curr += sizeof(metadata) + curr->size;
-        next += sizeof(metadata) + next->size;
+        //next += sizeof(metadata) + next->size;
     }
 
 

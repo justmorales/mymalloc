@@ -3,9 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 
-#ifndef REALMALLOC
 #include "mymalloc.h"
-#endif
 
 #define MEMSIZE 4096
 #define HEADERSIZE 8
@@ -17,6 +15,10 @@
 static void mallocReserveUnallocMem(){
     int* p = malloc(sizeof(double)*2);
     int* q = malloc(sizeof(double)*2);
+
+    printf("pointer p: %p\n", p);
+    printf("pointer q: %p\n", q);
+
     if(p != NULL && q != NULL){
         printf("TEST CASE 1: PASSED\n");
     }
@@ -31,6 +33,10 @@ static void mallocPtrOverlap(){
     int *p = malloc(sizeof(int));
     int *q = malloc(sizeof(int));
 
+
+    printf("----------------test 2 pointers----------------");
+    printf("pointer p: %p\n", p);
+    printf("pointer q: %p\n", q);
     if (p >= q-1 && p <= q) {
         printf("TEST CASE 2: FAILED, overlapped memory\n");
         return;
